@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "yadav.srinivasa.aiface" "\0"
-            VALUE "FileDescription", "ai_face_generator" "\0"
+            VALUE "FileDescription", "An AI flutter App to generate random faces. The Generated faces do not actually exist in real life." "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "ai_face_generator" "\0"
+            VALUE "InternalName", "AI Face Generator" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 yadav.srinivasa.aiface. All rights reserved." "\0"
             VALUE "OriginalFilename", "ai_face_generator.exe" "\0"
-            VALUE "ProductName", "ai_face_generator" "\0"
+            VALUE "ProductName", "AI Face Generator" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

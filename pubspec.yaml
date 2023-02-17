@@ -19,6 +19,8 @@ dependencies:
   path_provider: ^2.0.12
   download: ^1.0.0
   google_fonts: ^4.0.3
+  shared_preferences: ^2.0.17
+  provider: ^6.0.5
 
   cupertino_icons: ^1.0.2
 

@@ -1,42 +1,60 @@
 import 'dart:async';
 
 import 'package:ai_face_generator/home_screen.dart';
+import 'package:ai_face_generator/models/theme_provider.dart';
 import 'package:ai_face_generator/services/fake_face_service.dart';
+import 'package:ai_face_generator/utils/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  DarkThemeProvider themeChangeProvider = DarkThemeProvider();
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentAppTheme();
+  }
+
+  void getCurrentAppTheme() async {
+    themeChangeProvider.darkTheme =
+    await themeChangeProvider.darkThemePreference.getTheme();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      themeMode: ThemeMode.system,
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: const ColorScheme.light(),
-        textTheme: GoogleFonts.robotoMonoTextTheme(),
-      ),
-      darkTheme: ThemeData(
-        useMaterial3: true,
-        colorScheme: const ColorScheme.dark(),
-        textTheme: GoogleFonts.robotoMonoTextTheme(),
-      ),
-      debugShowCheckedModeBanner: false,
-      home: MultiRepositoryProvider(
-        providers: [
-          RepositoryProvider(
-            create: (context) => FakeFaceService(),
-          ),
-        ],
-        child: const SplashScreen(),
+    return  ChangeNotifierProvider(
+      create: (_) {
+        return themeChangeProvider;
+      },
+      child: Consumer<DarkThemeProvider>(
+        builder: (context, value1, child) {
+          return MaterialApp(
+            theme: Styles.themeData(themeChangeProvider.darkTheme, context),
+            debugShowCheckedModeBanner: false,
+            home: MultiRepositoryProvider(
+              providers: [
+                RepositoryProvider(
+                  create: (context) => FakeFaceService(),
+                ),
+              ],
+              child: const SplashScreen(),
+            ),
+          );
+        },
       ),
     );
   }
