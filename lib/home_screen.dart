@@ -326,6 +326,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           letterSpacing: 1.5,
+                          color: Colors.white,
                         ),
                         children: [
                           TextSpan(
@@ -333,6 +334,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             style: const TextStyle(
                               fontWeight: FontWeight.w400,
                               letterSpacing: 1,
+                              color: Colors.white,
                             ),
                           ),
                         ]
