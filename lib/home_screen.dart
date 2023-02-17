@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:ai_face_generator/blocs/fake_face/fake_face_bloc.dart';
 import 'package:ai_face_generator/models/fake_face_model.dart';
+import 'package:download/download.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
+import 'package:path_provider/path_provider.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -15,13 +20,43 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  bool _loading = false;
+  bool _loading = true;
   final FakeFaceBloc _fakeFaceBloc = FakeFaceBloc();
   FakeFace _fakeFace = FakeFace();
+  late Uint8List _image;
 
   int _minimumAge = 20, _maximumAge = 50;
 
   int _selectedIndex = 2;
+
+  Future _downloadImage() async {
+    if (_loading) return;
+    Directory? appDir;
+    final stream = Stream.fromIterable(_image);
+    if (kIsWeb) {
+      await download(stream, _fakeFace.filename!);
+      return;
+    } else if (Platform.isAndroid) {
+      appDir = Directory('/storage/emulated/0/Download');
+    } else if (Platform.isIOS) {
+      appDir = await getApplicationDocumentsDirectory();
+    } else {
+      appDir = await getDownloadsDirectory();
+    }
+    String pathName = appDir?.path ?? "";
+    String destinationPath = "$pathName${Platform.isWindows ? "\\" : "/"}${_fakeFace.filename}";
+    await download(stream, destinationPath);
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'The image has been downloaded successfully to $destinationPath',
+        ),
+        duration: const Duration(seconds: 5),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -76,6 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
           } else if (state is FakeFaceLoadedState) {
             setState(() {
               _fakeFace = state.fakeFace;
+              _image = state.uIntImage;
               _loading = false;
             });
           } else if (state is FakeFaceErrorState) {
@@ -101,16 +137,45 @@ class _HomeScreenState extends State<HomeScreen> {
           child: _loading
               ? LottieBuilder.asset(
             'assets/lottie_animations/face_load.json',
-          ) : Image.network(
-            _fakeFace.imageUrl.toString(),
-            fit: BoxFit.contain,
-            loadingBuilder: (BuildContext context, Widget child,
-                ImageChunkEvent? loadingProgress) {
-              if (loadingProgress == null) return child;
-              return LottieBuilder.asset(
-                'assets/lottie_animations/face_load.json',
-              );
-            },
+          ) : Stack(
+            children: [
+              Image.memory(
+                _image,
+                fit: BoxFit.contain,
+              ),
+              Visibility(
+                visible: !_loading,
+                child: Positioned(
+                  left: 10,
+                 bottom: 10,
+                  child: Container(
+                    padding: const EdgeInsets.all(5.0),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.3),
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'AGE\n',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 1.5,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: _fakeFace.age.toString(),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w400,
+                              letterSpacing: 1,
+                            ),
+                          ),
+                        ]
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -263,7 +328,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(width: 20.0,),
               ElevatedButton(
                 onPressed: _loading ? null : () {
-
+                  _downloadImage();
                 },
                 child: const Icon(
                   Icons.download,

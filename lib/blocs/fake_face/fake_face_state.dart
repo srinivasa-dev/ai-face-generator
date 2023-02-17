@@ -19,10 +19,11 @@ class FakeFaceLoadingState extends FakeFaceState {
 class FakeFaceLoadedState extends FakeFaceState {
 
   FakeFace fakeFace;
-  FakeFaceLoadedState({required this.fakeFace});
+  Uint8List uIntImage;
+  FakeFaceLoadedState({required this.fakeFace, required this.uIntImage});
 
   @override
-  List<Object?> get props => [fakeFace];
+  List<Object?> get props => [fakeFace, uIntImage];
 
 }
 
