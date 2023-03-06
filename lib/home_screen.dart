@@ -65,9 +65,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   final Uri _gitUrl = Uri.parse('https://github.com/srinivasa-dev/ai-face-generator');
-  final Uri _androidUrl = Uri.parse('https://github.com/srinivasa-dev/ai-face-generator/releases/download/1.0/ai_face_generator.apk');
+  final Uri _androidUrl = Uri.parse('https://github.com/srinivasa-dev/ai-face-generator/releases/download/1.1/ai_face_generator.apk');
   final Uri _webUrl = Uri.parse('https://srinivasa-dev.github.io/ai-face-generator/');
-  final Uri _windowsUrl = Uri.parse('https://github.com/srinivasa-dev/ai-face-generator/releases/download/1.0/ai-face-generator.exe');
+  final Uri _windowsUrl = Uri.parse('https://github.com/srinivasa-dev/ai-face-generator/releases/download/1.1/ai-face-generator.exe');
 
   Future<void> _launchUrl(url) async {
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
