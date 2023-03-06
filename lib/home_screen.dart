@@ -120,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (constraints.maxWidth > constraints.maxHeight) {
                   return Row(
                     children: [
-                      imageBuild(),
+                      imageBuild(state),
                       const SizedBox(width: 20.0,),
                       filterView(),
                     ],
@@ -128,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 } else {
                   return Column(
                     children: [
-                      imageBuild(),
+                      imageBuild(state),
                       filterView(),
                     ],
                   );
@@ -294,7 +294,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget imageBuild() {
+  Widget imageBuild(FakeFaceState state) {
     return Expanded(
       child: ClipRRect(
         borderRadius: BorderRadius.circular(5.0),
@@ -305,12 +305,12 @@ class _HomeScreenState extends State<HomeScreen> {
             'assets/lottie_animations/face_load.json',
           ) : Stack(
             children: [
-              Image.memory(
+              state is FakeFaceLoadedState ? Image.memory(
                 _image,
                 fit: BoxFit.contain,
-              ),
+              ) : Container(),
               Visibility(
-                visible: !_loading,
+                visible: !_loading && state is FakeFaceLoadedState,
                 child: Positioned(
                   left: 10,
                  bottom: 10,

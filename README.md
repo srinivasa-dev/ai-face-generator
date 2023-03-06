@@ -1,6 +1,6 @@
 # AI Face Generator
 
-An AI flutter App to generate random faces. The Generated faces do not actually exist in real life. This app uses the [thispersondoesnotexist](https://thispersondoesnotexist.com/) and the [fakeface](https://hankhank10.github.io/fakeface/) api.
+An AI flutter App to generate random faces. The Generated faces do not actually exist in real life. This app uses the [fakeface](https://hankhank10.github.io/fakeface/) API.
 Each image has been pre-analyzed by an AI algorithm called [pypy-agender](https://github.com/aristofun/py-agender) to identify the gender and age.
 
 ### 📥 Check out the app
