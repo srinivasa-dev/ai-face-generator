@@ -15,5 +15,4 @@ jobs:
           channel: 'stable'
       - uses: erickzanardo/flutter-gh-pages@v7
         with:
-          customArgs: --web-renderer html
           basehref: /ai-face-generator/
