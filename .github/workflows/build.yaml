@@ -15,4 +15,5 @@ jobs:
           channel: 'stable'
       - uses: erickzanardo/flutter-gh-pages@v7
         with:
+          customArgs: --web-browser-flag "--disable-web-security"
           basehref: /ai-face-generator/
