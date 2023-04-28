@@ -5,15 +5,11 @@ abstract class FakeFaceEvent extends Equatable {
 }
 
 class LoadFakeFace extends FakeFaceEvent {
-  final String? gender;
-  final int minimumAge;
-  final int maximumAge;
-  final bool? random;
   final BuildContext context;
 
-  const LoadFakeFace({this.gender, required this.minimumAge, required this.maximumAge, this.random = true, required this.context,});
+  const LoadFakeFace({required this.context,});
 
   @override
-  List<Object?> get props => [gender, minimumAge, maximumAge, random, context];
+  List<Object?> get props => [context];
 
 }

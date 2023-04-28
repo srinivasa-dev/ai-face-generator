@@ -30,9 +30,6 @@ class _HomeScreenState extends State<HomeScreen> {
   FakeFace _fakeFace = FakeFace();
   late Uint8List _image;
 
-  int _minimumAge = 20, _maximumAge = 50;
-  int _selectedIndex = 2;
-
   late DarkThemeProvider themeChange;
 
   Future _downloadImage() async {
@@ -40,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Directory? appDir;
     final stream = Stream.fromIterable(_image);
     if (kIsWeb) {
-      await download(stream, _fakeFace.filename!);
+      await download(stream, _fakeFace.fileName!);
       return;
     } else if (Platform.isAndroid) {
       appDir = Directory('/storage/emulated/0/Download');
@@ -50,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appDir = await getDownloadsDirectory();
     }
     String pathName = appDir?.path ?? "";
-    String destinationPath = "$pathName${Platform.isWindows ? "\\" : "/"}${_fakeFace.filename}";
+    String destinationPath = "$pathName${Platform.isWindows ? "\\" : "/"}${_fakeFace.fileName}";
     await download(stream, destinationPath);
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
@@ -65,9 +62,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   final Uri _gitUrl = Uri.parse('https://github.com/srinivasa-dev/ai-face-generator');
-  final Uri _androidUrl = Uri.parse('https://github.com/srinivasa-dev/ai-face-generator/releases/download/1.1/ai_face_generator.apk');
+  final Uri _androidUrl = Uri.parse('https://github.com/srinivasa-dev/ai-face-generator/releases/download/1.2/ai_face_generator.apk');
   final Uri _webUrl = Uri.parse('https://srinivasa-dev.github.io/ai-face-generator/');
-  final Uri _windowsUrl = Uri.parse('https://github.com/srinivasa-dev/ai-face-generator/releases/download/1.1/ai-face-generator.exe');
+  final Uri _windowsUrl = Uri.parse('https://github.com/srinivasa-dev/ai-face-generator/releases/download/1.2/ai-face-generator.exe');
 
   Future<void> _launchUrl(url) async {
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
@@ -83,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
         _darkMode = themeChange.darkTheme;
       });
     });
-    _fakeFaceBloc.add(LoadFakeFace(minimumAge: _minimumAge, maximumAge: _maximumAge, context: context));
+    _fakeFaceBloc.add(LoadFakeFace(context: context));
     super.initState();
   }
 
@@ -120,16 +117,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (constraints.maxWidth > constraints.maxHeight) {
                   return Row(
                     children: [
-                      imageBuild(state),
+                      Expanded(child: imageBuild(state)),
                       const SizedBox(width: 20.0,),
-                      filterView(),
+                      Expanded(
+                        child: buttonWidget(),
+                      ),
                     ],
                   );
                 } else {
                   return Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       imageBuild(state),
-                      filterView(),
+                      buttonWidget(),
                     ],
                   );
                 }
@@ -295,222 +295,49 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget imageBuild(FakeFaceState state) {
-    return Expanded(
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(5.0),
-        child: Container(
-          color: Theme.of(context).hoverColor,
-          child: _loading
-              ? LottieBuilder.asset(
-            'assets/lottie_animations/face_load.json',
-          ) : Stack(
-            children: [
-              state is FakeFaceLoadedState ? Image.memory(
-                _image,
-                fit: BoxFit.contain,
-              ) : Container(),
-              Visibility(
-                visible: !_loading && state is FakeFaceLoadedState,
-                child: Positioned(
-                  left: 10,
-                 bottom: 10,
-                  child: Container(
-                    padding: const EdgeInsets.all(5.0),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.3),
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                    child: RichText(
-                      text: TextSpan(
-                        text: 'AGE\n',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: 1.5,
-                          color: Colors.white,
-                        ),
-                        children: [
-                          TextSpan(
-                            text: _fakeFace.age.toString(),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w400,
-                              letterSpacing: 1,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ]
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(5.0),
+      child: Container(
+        color: Theme.of(context).hoverColor,
+        child: _loading
+            ? LottieBuilder.asset(
+          'assets/lottie_animations/face_load.json',
+        ) : state is FakeFaceLoadedState ? Image.memory(
+          _image,
+          fit: BoxFit.contain,
+        ) : Container(),
       ),
     );
   }
 
-  Widget filterView() {
-    return Expanded(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          SizedBox(
-            height: 55.0,
-            child: Row(
-              children: [
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        _selectedIndex = 0;
-                      });
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.only(topLeft: Radius.circular(5.0), bottomLeft: Radius.circular(5.0)),
-                        border: Border.all(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        color: _selectedIndex == 0 ? Theme.of(context).colorScheme.primary.withOpacity(0.4) : Colors.transparent,
-                      ),
-                      child: const Icon(
-                        Icons.male,
-                        size: 35.0,
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        _selectedIndex = 1;
-                      });
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        color: _selectedIndex == 1 ? Theme.of(context).colorScheme.primary.withOpacity(0.4) : Colors.transparent,
-                      ),
-                      child: const Icon(
-                        Icons.female,
-                        size: 35.0,
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        _selectedIndex = 2;
-                      });
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.only(topRight: Radius.circular(5.0), bottomRight: Radius.circular(5.0)),
-                        border: Border.all(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        color: _selectedIndex == 2 ? Theme.of(context).colorScheme.primary.withOpacity(0.4) : Colors.transparent,
-                      ),
-                      child: const Icon(
-                        Icons.shuffle,
-                        size: 35.0,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+  Widget buttonWidget() {
+    return Row(
+      children: [
+        Expanded(
+          child: ElevatedButton(
+            onPressed: _loading ? null : () {
+              _fakeFaceBloc.add(LoadFakeFace(context: context));
+            },
+            child: const Text(
+              'GENERATE',
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 1.4,
+              ),
             ),
           ),
-          Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Age Range',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                    ),
-                  ),
-                  Text(
-                    '$_minimumAge - $_maximumAge years',
-                    style: const TextStyle(
-                      fontSize: 16.0,
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 30,
-                child: RangeSlider(
-                  min: 0,
-                  max: 100,
-                  values: RangeValues(_minimumAge.toDouble(), _maximumAge.toDouble()),
-                  onChanged: (value) {
-                    if(value.start.floor() <= 76 && value.end.floor() >= 9) {
-                      setState(() {
-                        _minimumAge = value.start.floor();
-                        _maximumAge = value.end.floor();
-                      });
-                    }
-                  },
-                  onChangeStart: (value) {
-                    HapticFeedback.vibrate();
-                  },
-                  onChangeEnd: (value) {
-                    HapticFeedback.vibrate();
-                  },
-                ),
-              ),
-            ],
+        ),
+        const SizedBox(width: 20.0,),
+        ElevatedButton(
+          onPressed: _loading ? null : () {
+            _downloadImage();
+          },
+          child: const Icon(
+            Icons.download,
           ),
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: _loading ? null : () {
-                    if(_selectedIndex == 0) {
-                      _fakeFaceBloc.add(LoadFakeFace(gender: 'male', minimumAge: _minimumAge, maximumAge: _maximumAge, random: false, context: context));
-                    } else if(_selectedIndex == 1) {
-                      _fakeFaceBloc.add(LoadFakeFace(gender: 'female', minimumAge: _minimumAge, maximumAge: _maximumAge, random: false, context: context));
-                    } else if(_selectedIndex == 2) {
-                      _fakeFaceBloc.add(LoadFakeFace(minimumAge: _minimumAge, maximumAge: _maximumAge, context: context));
-                    } else {
-                      _fakeFaceBloc.add(LoadFakeFace(minimumAge: _minimumAge, maximumAge: _maximumAge, context: context));
-                    }
-                  },
-                  child: const Text(
-                    'GENERATE',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 1.4,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 20.0,),
-              ElevatedButton(
-                onPressed: _loading ? null : () {
-                  _downloadImage();
-                },
-                child: const Icon(
-                  Icons.download,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

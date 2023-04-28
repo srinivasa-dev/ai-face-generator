@@ -1,15 +1,16 @@
 # AI Face Generator
 
-An AI flutter App to generate random faces. The Generated faces do not actually exist in real life. This app uses the [fakeface](https://hankhank10.github.io/fakeface/) API.
-Each image has been pre-analyzed by an AI algorithm called [pypy-agender](https://github.com/aristofun/py-agender) to identify the gender and age.
+An AI flutter App to generate random faces. The Generated faces do not actually exist in real life. This app uses the [100k-faces](https://github.com/ozgrozer/100k-faces) API.
+
+> As the CORS is not enabled for the server used by the API, to run this project on web please use `flutter run -d chrome --web-browser-flag "--disable-web-security"` command.
 
 ### 📥 Check out the app
 
 | OS | Actions                                                                                                                                                            |
 |----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Android   | [![Download apk](https://img.shields.io/badge/Download-apk-green)](https://github.com/srinivasa-dev/ai-face-generator/releases/download/1.1/ai_face_generator.apk) |
+| Android   | [![Download apk](https://img.shields.io/badge/Download-apk-green)](https://github.com/srinivasa-dev/ai-face-generator/releases/download/1.2/ai_face_generator.apk) |
 | Web   | [![Open Web](https://img.shields.io/badge/Open-web-orange)](https://srinivasa-dev.github.io/ai-face-generator/)                                                    |
-| Windows | [![Download exe](https://img.shields.io/badge/Download-exe-blue)](https://github.com/srinivasa-dev/ai-face-generator/releases/download/1.1/ai-face-generator.exe)  |
+| Windows | [![Download exe](https://img.shields.io/badge/Download-exe-blue)](https://github.com/srinivasa-dev/ai-face-generator/releases/download/1.2/ai-face-generator.exe)  |
 
 ### 📸 Screenshots
 

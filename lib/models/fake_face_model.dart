@@ -1,29 +1,19 @@
 class FakeFace {
-  int? age;
-  String? dateAdded;
-  String? filename;
-  String? gender;
-  String? imageUrl;
-  String? lastServed;
-  String? source;
+  String? url;
+  String? fileName;
 
   FakeFace({
-    this.age,
-    this.dateAdded,
-    this.filename,
-    this.gender,
-    this.imageUrl,
-    this.lastServed,
-    this.source
+    this.url,
   });
 
   FakeFace.fromJson(Map<String, dynamic> json) {
-    age = json['age'] ?? 0;
-    dateAdded = json['date_added'] ?? '';
-    filename = json['filename'] ?? '';
-    gender = json['gender'] ?? '';
-    imageUrl = json['image_url'] ?? '';
-    lastServed = json['last_served'] ?? '';
-    source = json['source'] ?? '';
+
+    String file = json['url'] ?? '';
+
+    if(json['url'] != null) {
+      file = file.split('/').last;
+    }
+    url = json['url'] ?? '';
+    fileName = file;
   }
 }

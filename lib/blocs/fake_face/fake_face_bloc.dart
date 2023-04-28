@@ -20,12 +20,12 @@ class FakeFaceBloc extends Bloc<FakeFaceEvent, FakeFaceState> {
       if(event is LoadFakeFace) {
         emit(FakeFaceLoadingState());
         try {
-          var fakeFaceResponse = await FakeFaceService().getFace(gender: event.gender, minimumAge: event.minimumAge, maximumAge: event.maximumAge, random: event.random).timeout(const Duration(seconds: 10));
+          var fakeFaceResponse = await FakeFaceService().getFace().timeout(const Duration(seconds: 10));
           var data = json.decode(fakeFaceResponse.body);
 
           if(fakeFaceResponse.statusCode == 200) {
             FakeFace fakeFace = FakeFace.fromJson(data);
-            Uint8List uIntImage = await readBytes(Uri.parse(fakeFace.imageUrl!));
+            Uint8List uIntImage = await readBytes(Uri.parse(fakeFace.url!));
             emit(FakeFaceLoadedState(fakeFace: fakeFace, uIntImage: uIntImage));
           } else {
             ScaffoldMessenger.of(event.context).showSnackBar(

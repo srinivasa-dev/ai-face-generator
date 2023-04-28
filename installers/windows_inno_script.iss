@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "AI Face Generator"
-#define MyAppVersion "1.1"
+#define MyAppVersion "1.2"
 #define MyAppPublisher "Srinivasa Yadav"
 #define MyAppURL "https://srinivasa-dev.github.io/ai-face-generator/"
 #define MyAppExeName "ai_face_generator.exe"
