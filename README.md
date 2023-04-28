@@ -2,7 +2,9 @@
 
 An AI flutter App to generate random faces. The Generated faces do not actually exist in real life. This app uses the [100k-faces](https://github.com/ozgrozer/100k-faces) API.
 
-> As the CORS is not enabled for the server used by the API, to run this project on web please use `flutter run -d chrome --web-browser-flag "--disable-web-security"` command.
+<p style="background-color: #D4ECDD; padding: 10px; border-radius: 15px;"> 
+    As the CORS is not enabled for the server used by the API, to run this project on web please use <code style="background-color: #f6f6f6;">flutter run -d chrome --web-browser-flag "--disable-web-security"</code> command. 
+</p>
 
 ### 📥 Check out the app
 
